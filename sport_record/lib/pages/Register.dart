@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sport_record/util/NativeCache.dart';
 import 'package:sport_record/widgets/EditText.dart';
-import 'Home.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -57,7 +56,6 @@ class RegisterState extends State<Register> {
 
   _register() {
     NativeCache.setData(NativeCache.USER_ID, uId);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Home(id: uId,)));
+    Navigator.of(context).pop(uId);
   }
 }

@@ -11,8 +11,7 @@ import '../Sport.dart';
 import '../gym_plan_entity.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key, @required this.id}) : super(key: key);
-  final String id;
+  Home({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -33,11 +32,7 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    uId = widget.id;
-
-    if (uId != null) {
-      _initListData(uId);
-    }
+    initUid();
 
     NativeCache.getData("map").then((value) {
       if (value == null) return;
@@ -56,7 +51,7 @@ class HomeState extends State<Home> {
     return new Scaffold(
         appBar: new AppBar(
 //        title: new Text(_getDate()),
-          title: new Text(uId.toString()),
+          title: new Text(uId == null ? "null" : uId),
           automaticallyImplyLeading: false,
           actions: <Widget>[
             OutlineButton.icon(
@@ -64,6 +59,34 @@ class HomeState extends State<Home> {
           ],
         ),
         body: _getListLayout());
+  }
+
+  initUid() async{
+    // 获取UID
+    await NativeCache.getData(NativeCache.USER_ID).then((value) {
+      print("get uid=>"+value.toString());
+      if (value == null){
+        _toRegister();
+      }else{
+        uId = value.toString();
+        _initListData(uId);
+      }
+
+    });
+
+  }
+
+  _toRegister() {
+    Navigator.of(context)
+        .pushNamed('register')
+        .then((value) => _handleRegisterBack(value));
+  }
+
+  _handleRegisterBack(value){
+    if (value != null) {
+      uId = value.toString();
+      _initListData(value.toString());
+    }
   }
 
   _getDate() {
